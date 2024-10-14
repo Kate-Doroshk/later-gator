@@ -19,14 +19,20 @@
 // get refs to the input and output elements in the page
 const input = document.getElementById("target");
 const output = document.querySelector("output");
+const list = document.getElementById("available-targets")
 
 // when the input has focus and enter is pressed, invoke the function named later
 input.addEventListener("keydown", (ev) => {
   console.debug("keydown", ev.key);
+
   if (ev.key === "Enter") {
+
+    options((keys) => setOptions(keys), input.value);
+    /*
     console.log("Enter detected. current value:", input.value);
-    // TODO use the provided later() function here
+    later(input.value, (valediction) => setOutput(valediction.target, valediction.valediction));*/
   }
+
 });
 
 // when you have the result from this function, update(replace) the content of the output element with the result formatted as:
@@ -39,12 +45,28 @@ input.addEventListener("keydown", (ev) => {
 //
 const setOutput = (target, valediction) => {
   console.log("setOutput", target, valediction);
-  // TODO see comments just above 🙄
+  const outputString = '' + valediction + ', ' + target;
+  output.textContent = outputString;
 };
+
+const setOptions = (options) => {
+  console.log(options);
+  options.forEach((option) => generateOptionButton(option));
+}
+
+const generateOptionButton = (option) =>{
+  const li = document.createElement("li");
+  const button = document.createElement("button");
+  button.textContent = option;
+  button.classList.add(option);
+  button.addEventListener("click", ()=> { later(option, (valediction) => setOutput(valediction.target, valediction.valediction))});
+  li.appendChild(button);
+  list.appendChild(li);
+}
 
 // for Part 2
 // change the code so that rather than directly requesting a valediction with the user's input,
-// the page instead queries for matching targets using the provided option() function 
+// the page instead queries for matching targets using the provided option() function
 // (if the user hasn't entered anything, simply exclude the query argument in your invocation to options).
 // add each of the resulting target options as buttons in list items in the ul.
 // when any of these buttons are clicked, user the later() function to request the corresponding valediction and update the output element as in Part 1
